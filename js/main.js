@@ -1,13 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
-  
+  // Инициализация ripple-эффекта
   initRippleEffects();
   
+  // Загрузка сохраненных данных
   loadResumeData();
   
+  // Настройка автосохранения
   setupAutoSave();
-
+  
+  // Настройка кнопки скачивания
   setupDownloadButton();
   
+  // Обработка мобильного меню контактов
   setupMobileContacts();
 });
 
@@ -79,7 +83,7 @@ function setupDownloadButton() {
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
       
- 
+      // Для мобильных - предупреждение
       if (window.innerWidth < 768) {
         if (!confirm('Для лучшего результата рекомендуется использовать альбомную ориентацию. Продолжить?')) {
           btn.disabled = false;
@@ -88,7 +92,7 @@ function setupDownloadButton() {
         }
       }
       
-     
+      // Скрываем кнопку перед генерацией
       const downloadBtn = document.querySelector('.download-btn');
       downloadBtn.style.display = 'none';
       
@@ -109,7 +113,7 @@ function setupDownloadButton() {
       pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
       pdf.save('Резюме_Flutter_разработчика.pdf');
       
-      
+      // Восстанавливаем кнопку
       downloadBtn.style.display = 'flex';
       btn.disabled = false;
       btn.innerHTML = originalText;
@@ -133,3 +137,4 @@ function setupMobileContacts() {
     });
   }
 }
+
