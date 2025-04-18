@@ -1,129 +1,140 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Резюме Flutter-разработчика</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <button id="downloadBtn" class="download-btn">
-    <i class="fas fa-download"></i> Скачать PDF
-  </button>
+document.addEventListener('DOMContentLoaded', function() {
+  // Инициализация ripple-эффекта
+  initRippleEffects();
+  
+  // Загрузка сохраненных данных
+  loadResumeData();
+  
+  // Настройка автосохранения
+  setupAutoSave();
+  
+  // Настройка кнопки скачивания
+  setupDownloadButton();
+  
+  // Обработка мобильного меню контактов
+  setupMobileContacts();
+});
 
-  <div class="resume-container" id="resumeContent">
-    <!-- Левая колонка -->
-    <div class="left-column">
-      <div class="avatar-container">
-        <div class="avatar-placeholder"></div>
-      </div>
+function initRippleEffects() {
+  document.querySelectorAll('.download-btn').forEach(el => {
+    el.addEventListener('click', function(e) {
+      // Добавляем контейнер для ripple
+      const rippleContainer = document.createElement('div');
+      rippleContainer.style.position = 'absolute';
+      rippleContainer.style.overflow = 'hidden';
+      rippleContainer.style.top = '0';
+      rippleContainer.style.left = '0';
+      rippleContainer.style.right = '0';
+      rippleContainer.style.bottom = '0';
+      rippleContainer.style.borderRadius = 'inherit';
+      rippleContainer.style.pointerEvents = 'none';
+      
+      const ripple = document.createElement('span');
+      ripple.classList.add('wave');
+      
+      const rect = this.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+      
+      ripple.style.width = ripple.style.height = `${size}px`;
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      
+      rippleContainer.appendChild(ripple);
+      this.appendChild(rippleContainer);
+      
+      ripple.addEventListener('animationend', () => {
+        rippleContainer.remove();
+      });
+    });
+  });
+}
 
-      <section class="personal-info">
-        <h1 contenteditable="true">Антропов Данил</h1>
-        <p class="position" contenteditable="true">Старший разработчик Flutter</p>
-      </section>
+function loadResumeData() {
+  const savedData = localStorage.getItem('resumeData');
+  if (savedData) {
+    const resumeData = JSON.parse(savedData);
+    document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+      if (resumeData[`resumeItem_${index}`]) {
+        el.innerHTML = resumeData[`resumeItem_${index}`];
+      }
+    });
+  }
+}
 
-      <section class="contact-section section">
-        <h2>Контакты</h2>
-        <div class="contact-item"><i class="fas fa-map-marker-alt icon"></i><span contenteditable="true">Новосибирск, Россия</span></div>
-        <div class="contact-item"><i class="fas fa-envelope icon"></i><span contenteditable="true">danil.flutterdev@mail.ru</span></div>
-        <div class="contact-item"><i class="fas fa-phone icon"></i><span contenteditable="true">+7 (913) 650-32-14</span></div>
-        <div class="contact-item"><i class="fab fa-github icon"></i><span contenteditable="true">github.com/danil-flutter</span></div>
-        <div class="contact-item"><i class="fab fa-linkedin icon"></i><span contenteditable="true">linkedin.com/in/danil-flutter</span></div>
-      </section>
+function setupAutoSave() {
+  document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+    el.addEventListener('blur', function() {
+      const resumeData = {};
+      document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+        resumeData[`resumeItem_${index}`] = el.innerHTML;
+      });
+      localStorage.setItem('resumeData', JSON.stringify(resumeData));
+    });
+  });
+}
 
-      <section class="skills-section section">
-        <h2>Навыки</h2>
-        <div class="skill-category">
-          <h3>Flutter</h3>
-          <ul>
-            <li contenteditable="true">Dart (3+ года опыта)</li>
-            <li contenteditable="true">Управление состоянием (BLoC, Provider, Riverpod)</li>
-            <li contenteditable="true">Flutter SDK (все версии)</li>
-            <li contenteditable="true">Кастомные виджеты и анимации</li>
-          </ul>
-        </div>
+function setupDownloadButton() {
+  document.getElementById('downloadBtn').addEventListener('click', async function() {
+    try {
+      const btn = this;
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      
+      // Для мобильных - предупреждение
+      if (window.innerWidth < 768) {
+        if (!confirm('Для лучшего результата рекомендуется использовать альбомную ориентацию. Продолжить?')) {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          return;
+        }
+      }
+      
+      // Скрываем кнопку перед генерацией
+      const downloadBtn = document.querySelector('.download-btn');
+      downloadBtn.style.display = 'none';
+      
+      const canvas = await html2canvas(document.getElementById('resumeContent'), {
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        scrollX: 0,
+        scrollY: -window.scrollY,
+        backgroundColor: '#FFFFFF'
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      pdf.save('Резюме_Flutter_разработчика.pdf');
+      
+      // Восстанавливаем кнопку
+      downloadBtn.style.display = 'flex';
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    } catch (error) {
+      console.error('Ошибка генерации PDF:', error);
+      alert('Произошла ошибка при генерации PDF');
+      document.getElementById('downloadBtn').disabled = false;
+      document.getElementById('downloadBtn').innerHTML = '<i class="fas fa-download"></i>';
+    }
+  });
+}
 
-        <div class="skill-category">
-          <h3>Серверная часть</h3>
-          <ul>
-            <li contenteditable="true">Firebase (Auth, Firestore, Cloud Functions)</li>
-            <li contenteditable="true">REST API, GraphQL, WebSockets</li>
-            <li contenteditable="true">Node.js (базовый уровень)</li>
-          </ul>
-        </div>
-      </section>
+function setupMobileContacts() {
+  const showMoreBtn = document.querySelector('.show-more-contacts');
+  if (showMoreBtn && window.innerWidth <= 576) {
+    showMoreBtn.addEventListener('click', () => {
+      document.querySelectorAll('.contact-item.mobile-hidden').forEach(item => {
+        item.style.display = 'flex';
+      });
+      showMoreBtn.style.display = 'none';
+    });
+  }
+}
 
-    
-    </div>
-
-    <!-- Правая колонка -->
-    <div class="right-column">
-      <section class="about-section section">
-        <h2>О себе</h2>
-        <p contenteditable="true">Опытный Flutter-разработчик с 4+ годами коммерческого опыта создания кроссплатформенных мобильных приложений. Специализируюсь на разработке высоконагруженных приложений с использованием современных архитектурных подходов (Clean Architecture, BLoC, Provider). Имею успешный опыт публикации приложений в App Store и Google Play с аудиторией 500k+ пользователей. Постоянно совершенствую навыки, слежу за новыми технологиями в мобильной разработке.</p>
-      </section>
-
-      <section class="experience-section section">
-        <h2>Опыт работы</h2>
-        <div class="experience-item">
-          <div class="experience-header">
-            <h3 contenteditable="true">Старший разработчик Flutter</h3>
-            <span class="experience-period" contenteditable="true">2021 — настоящее время</span>
-          </div>
-          <p class="company-name" contenteditable="true">FinTech Solutions Inc.</p>
-          <ul class="experience-details">
-            <li contenteditable="true">Разработка финансового приложения с 500k+ пользователей</li>
-            <li contenteditable="true">Оптимизация производительности и улучшение UX</li>
-            <li contenteditable="true">Руководство командой из 3 младших разработчиков</li>
-            <li contenteditable="true">Реализация сложных анимаций и кастомных UI-компонентов</li>
-            <li contenteditable="true">Интеграция с платежными системами (Stripe, Apple Pay, Google Pay)</li>
-          </ul>
-        </div>
-
-        <div class="experience-item">
-          <div class="experience-header">
-            <h3 contenteditable="true">Middle Flutter Developer</h3>
-            <span class="experience-period" contenteditable="true">2019 — 2021</span>
-          </div>
-          <p class="company-name" contenteditable="true">Mobile Solutions LLC</p>
-          <ul class="experience-details">
-            <li contenteditable="true">Разработал 10+ мобильных приложений для клиентов из различных отраслей</li>
-            <li contenteditable="true">Реализовал сложные UI-компоненты с кастомными анимациями</li>
-            <li contenteditable="true">Интегрировал платежные системы (Stripe, PayPal)</li>
-            <li contenteditable="true">Оптимизировал производительность приложений, сократив время запуска на 40%</li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="education-section section">
-        <h2>Образование</h2>
-        <div class="education-item">
-          <div class="education-header">
-            <h3 contenteditable="true">Сибирский государственный университет телекоммуникаций и информатики</h3>
-            <span class="education-period" contenteditable="true">2015 — 2019</span>
-          </div>
-          <p class="education-degree" contenteditable="true">Бакалавр информатики и вычислительной техники</p>
-          <p contenteditable="true">Специализация: Программное обеспечение систем мобильной связи</p>
-        </div>
-
-        <div class="education-item">
-          <h3 contenteditable="true">Дополнительные курсы</h3>
-          <ul class="education-details">
-            <li contenteditable="true">Advanced Flutter Development - Udemy, 2022</li>
-            <li contenteditable="true">Dart Masterclass - Coursera, 2021</li>
-            <li contenteditable="true">Mobile App Design Patterns - Stepik, 2020</li>
-          </ul>
-        </div>
-      </section>
-    </div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="js/main.js"></script>
-</body>
-</html>
