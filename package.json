@@ -9,6 +9,11 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^5.2.0"
+    "esbuild": "^0.25.2",
+    "vite": "^6.3.2"
+  },
+  "dependencies": {
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1"
   }
 }
