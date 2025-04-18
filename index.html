@@ -1,13 +1,128 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="./js/main.js"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Резюме Flutter-разработчика</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <button id="downloadBtn" class="download-btn">
+    <i class="fas fa-download"></i> Скачать PDF
+  </button>
+
+  <div class="resume-container" id="resumeContent">
+    <!-- Левая колонка -->
+    <div class="left-column">
+      <div class="avatar-container">
+        <div class="avatar-placeholder"></div>
+      </div>
+
+      <section class="personal-info">
+        <h1 contenteditable="true">Антропов Данил</h1>
+        <p class="position" contenteditable="true">Старший разработчик Flutter</p>
+      </section>
+
+      <section class="contact-section section">
+        <h2>Контакты</h2>
+        <div class="contact-item"><i class="fas fa-map-marker-alt icon"></i><span contenteditable="true">Новосибирск, Россия</span></div>
+        <div class="contact-item"><i class="fas fa-envelope icon"></i><span contenteditable="true">danil.flutterdev@mail.ru</span></div>
+        <div class="contact-item"><i class="fas fa-phone icon"></i><span contenteditable="true">+7 (913) 650-32-14</span></div>
+        <div class="contact-item"><i class="fab fa-github icon"></i><span contenteditable="true">github.com/danil-flutter</span></div>
+        <div class="contact-item"><i class="fab fa-linkedin icon"></i><span contenteditable="true">linkedin.com/in/danil-flutter</span></div>
+      </section>
+
+      <section class="skills-section section">
+        <h2>Навыки</h2>
+        <div class="skill-category">
+          <h3>Flutter</h3>
+          <ul>
+            <li contenteditable="true">Dart (3+ года опыта)</li>
+            <li contenteditable="true">Управление состоянием (BLoC, Provider, Riverpod)</li>
+            <li contenteditable="true">Flutter SDK (все версии)</li>
+            <li contenteditable="true">Кастомные виджеты и анимации</li>
+          </ul>
+        </div>
+
+        <div class="skill-category">
+          <h3>Серверная часть</h3>
+          <ul>
+            <li contenteditable="true">Firebase (Auth, Firestore, Cloud Functions)</li>
+            <li contenteditable="true">REST API, GraphQL, WebSockets</li>
+            <li contenteditable="true">Node.js (базовый уровень)</li>
+          </ul>
+        </div>
+      </section>
+
+    
+    </div>
+
+    <!-- Правая колонка -->
+    <div class="right-column">
+      <section class="about-section section">
+        <h2>О себе</h2>
+        <p contenteditable="true">Опытный Flutter-разработчик с 4+ годами коммерческого опыта создания кроссплатформенных мобильных приложений. Специализируюсь на разработке высоконагруженных приложений с использованием современных архитектурных подходов (Clean Architecture, BLoC, Provider). Имею успешный опыт публикации приложений в App Store и Google Play с аудиторией 500k+ пользователей. Постоянно совершенствую навыки, слежу за новыми технологиями в мобильной разработке.</p>
+      </section>
+
+      <section class="experience-section section">
+        <h2>Опыт работы</h2>
+        <div class="experience-item">
+          <div class="experience-header">
+            <h3 contenteditable="true">Старший разработчик Flutter</h3>
+            <span class="experience-period" contenteditable="true">2021 — настоящее время</span>
+          </div>
+          <p class="company-name" contenteditable="true">FinTech Solutions Inc.</p>
+          <ul class="experience-details">
+            <li contenteditable="true">Разработка финансового приложения с 500k+ пользователей</li>
+            <li contenteditable="true">Оптимизация производительности и улучшение UX</li>
+            <li contenteditable="true">Руководство командой из 3 младших разработчиков</li>
+            <li contenteditable="true">Реализация сложных анимаций и кастомных UI-компонентов</li>
+            <li contenteditable="true">Интеграция с платежными системами (Stripe, Apple Pay, Google Pay)</li>
+          </ul>
+        </div>
+
+        <div class="experience-item">
+          <div class="experience-header">
+            <h3 contenteditable="true">Middle Flutter Developer</h3>
+            <span class="experience-period" contenteditable="true">2019 — 2021</span>
+          </div>
+          <p class="company-name" contenteditable="true">Mobile Solutions LLC</p>
+          <ul class="experience-details">
+            <li contenteditable="true">Разработал 10+ мобильных приложений для клиентов из различных отраслей</li>
+            <li contenteditable="true">Реализовал сложные UI-компоненты с кастомными анимациями</li>
+            <li contenteditable="true">Интегрировал платежные системы (Stripe, PayPal)</li>
+            <li contenteditable="true">Оптимизировал производительность приложений, сократив время запуска на 40%</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="education-section section">
+        <h2>Образование</h2>
+        <div class="education-item">
+          <div class="education-header">
+            <h3 contenteditable="true">Сибирский государственный университет телекоммуникаций и информатики</h3>
+            <span class="education-period" contenteditable="true">2015 — 2019</span>
+          </div>
+          <p class="education-degree" contenteditable="true">Бакалавр информатики и вычислительной техники</p>
+          <p contenteditable="true">Специализация: Программное обеспечение систем мобильной связи</p>
+        </div>
+
+        <div class="education-item">
+          <h3 contenteditable="true">Дополнительные курсы</h3>
+          <ul class="education-details">
+            <li contenteditable="true">Advanced Flutter Development - Udemy, 2022</li>
+            <li contenteditable="true">Dart Masterclass - Coursera, 2021</li>
+            <li contenteditable="true">Mobile App Design Patterns - Stepik, 2020</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
 </html>
