@@ -12,8 +12,19 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initRippleEffects() {
-  document.querySelectorAll('[contenteditable="true"], .download-btn').forEach(el => {
+  document.querySelectorAll('.download-btn').forEach(el => {
     el.addEventListener('click', function(e) {
+      // Добавляем контейнер для ripple
+      const rippleContainer = document.createElement('div');
+      rippleContainer.style.position = 'absolute';
+      rippleContainer.style.overflow = 'hidden';
+      rippleContainer.style.top = '0';
+      rippleContainer.style.left = '0';
+      rippleContainer.style.right = '0';
+      rippleContainer.style.bottom = '0';
+      rippleContainer.style.borderRadius = 'inherit';
+      rippleContainer.style.pointerEvents = 'none';
+      
       const ripple = document.createElement('span');
       ripple.classList.add('wave');
       
@@ -26,10 +37,11 @@ function initRippleEffects() {
       ripple.style.left = `${x}px`;
       ripple.style.top = `${y}px`;
       
-      this.appendChild(ripple);
+      rippleContainer.appendChild(ripple);
+      this.appendChild(rippleContainer);
       
       ripple.addEventListener('animationend', () => {
-        ripple.remove();
+        rippleContainer.remove();
       });
     });
   });
