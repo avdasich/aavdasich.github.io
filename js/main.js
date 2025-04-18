@@ -1,15 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Инициализация ripple-эффекта
+  
   initRippleEffects();
   
-  // Загрузка сохраненных данных
   loadResumeData();
   
-  // Настройка автосохранения
   setupAutoSave();
-  
-  // Настройка кнопки скачивания
+
   setupDownloadButton();
+  
+  setupMobileContacts();
 });
 
 function initRippleEffects() {
@@ -66,35 +65,39 @@ function setupDownloadButton() {
       const btn = this;
       const originalText = btn.innerHTML;
       btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Генерация...';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
       
-      // Генерация PDF
-      const { jsPDF } = window.jspdf;
-      const element = document.getElementById('resumeContent');
+ 
+      if (window.innerWidth < 768) {
+        if (!confirm('Для лучшего результата рекомендуется использовать альбомную ориентацию. Продолжить?')) {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          return;
+        }
+      }
       
-      // Скрываем кнопку перед генерацией
+     
       const downloadBtn = document.querySelector('.download-btn');
       downloadBtn.style.display = 'none';
       
-      const canvas = await html2canvas(element, {
+      const canvas = await html2canvas(document.getElementById('resumeContent'), {
         scale: 2,
         logging: false,
         useCORS: true,
-        allowTaint: true,
         scrollX: 0,
-        scrollY: 0,
+        scrollY: -window.scrollY,
         backgroundColor: '#FFFFFF'
       });
       
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210; // A4 width in mm
+      const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210;
       const imgHeight = canvas.height * imgWidth / canvas.width;
       
       pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
       pdf.save('Резюме_Flutter_разработчика.pdf');
       
-      // Восстанавливаем кнопку
+      
       downloadBtn.style.display = 'flex';
       btn.disabled = false;
       btn.innerHTML = originalText;
@@ -102,7 +105,19 @@ function setupDownloadButton() {
       console.error('Ошибка генерации PDF:', error);
       alert('Произошла ошибка при генерации PDF');
       document.getElementById('downloadBtn').disabled = false;
-      document.getElementById('downloadBtn').innerHTML = '<i class="fas fa-download"></i> Скачать PDF';
+      document.getElementById('downloadBtn').innerHTML = '<i class="fas fa-download"></i>';
     }
   });
+}
+
+function setupMobileContacts() {
+  const showMoreBtn = document.querySelector('.show-more-contacts');
+  if (showMoreBtn && window.innerWidth <= 576) {
+    showMoreBtn.addEventListener('click', () => {
+      document.querySelectorAll('.contact-item.mobile-hidden').forEach(item => {
+        item.style.display = 'flex';
+      });
+      showMoreBtn.style.display = 'none';
+    });
+  }
 }
